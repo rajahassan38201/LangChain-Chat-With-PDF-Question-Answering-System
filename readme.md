@@ -1,7 +1,5 @@
 # Langchain Chat With PDF
 
-Certainly! Below is a **professional README file** for your project **Chat With PDF LangChain Application (RAG)** written in clear and easy English:
-
 ---
 
 # 📄 Chat With PDF - LangChain RAG Application
