@@ -1,10 +1,11 @@
 streamlit
 python-dotenv
 PyPDF2
-pypdf
 langchain
 langchain-community
 langchain-google-genai
 chromadb==0.4.24
 protobuf==3.20.3
 setuptools
+numpy==1.24.4
+pypdf
