@@ -3,10 +3,11 @@ import streamlit as st
 from dotenv import load_dotenv
 from langchain_community.document_loaders import PyPDFLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
-from langchain.vectorstores import FAISS
+from langchain.vectorstores import Chroma
 from langchain_google_genai import GoogleGenerativeAIEmbeddings, ChatGoogleGenerativeAI
 from langchain.chains import RetrievalQA
 import tempfile
+import shutil
 
 # Load environment variables
 load_dotenv()
@@ -18,7 +19,7 @@ embedding = GoogleGenerativeAIEmbeddings(model="models/embedding-001", google_ap
 
 # Streamlit UI Configuration
 st.set_page_config(page_title="RAG System - PDF Q&A", layout="centered")
-st.title("📄 PDF Question Answering System Using LangChain + RAG")
+st.title("📄 PDF Question Answering System Using LangChain + Chroma DB")
 
 # Initialize session state for vector store and QA chain
 if "vectorstore" not in st.session_state:
@@ -50,8 +51,9 @@ if uploaded_file:
         text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=200)
         texts = text_splitter.split_documents(pages)
 
-        # Create vector store and retriever
-        vectorstore = FAISS.from_documents(texts, embedding)
+        # Use Chroma as vector store
+        chroma_dir = tempfile.mkdtemp()
+        vectorstore = Chroma.from_documents(documents=texts, embedding=embedding, persist_directory=chroma_dir)
         retriever = vectorstore.as_retriever(search_type="similarity", search_kwargs={"k": 4})
 
         # Create QA chain
@@ -73,7 +75,6 @@ if st.session_state.qa_chain:
             st.session_state.answer = answer
 
     if st.session_state.answer:
-        # Show concise answer
         st.markdown("### Answer:")
         concise = ". ".join(st.session_state.answer.split(". ")[:5])
         st.write(concise + ("." if not concise.endswith(".") else ""))
