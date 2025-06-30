@@ -10,3 +10,4 @@ setuptools>=65.5.0
 numpy>=1.24.4
 pdfminer.six==20221105
 pypdf
+sqlite3
