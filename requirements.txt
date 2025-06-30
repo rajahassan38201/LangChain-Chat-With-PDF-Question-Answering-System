@@ -1,6 +1,8 @@
-dotenv
+streamlit
+PyPDF2
+python-dotenv
 langchain
-langchain_community
+langchain_core
 langchain_google_genai
-faiss
-pypdf
+FAISS
+PyPDF
