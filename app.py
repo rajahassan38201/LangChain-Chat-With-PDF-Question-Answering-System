@@ -29,6 +29,7 @@ if "vectorstore" not in st.session_state:
 # Upload and Process PDF File
 uploaded_file = st.file_uploader("Upload a PDF file", type="pdf")
 
+# The main logic is now inside this block
 if uploaded_file:
     if st.session_state.previous_file != uploaded_file.name:
         st.session_state.previous_file = uploaded_file.name
@@ -61,21 +62,23 @@ if uploaded_file:
         st.session_state.vectorstore = vectorstore
         st.session_state.qa_chain = qa_chain
 
-# Display QA Interface
-if st.session_state.qa_chain:
-    st.subheader("Ask a question from the PDF")
-    user_question = st.text_input("Enter your question")
+    # Display QA Interface is now here, inside the uploaded_file block
+    if st.session_state.qa_chain:
+        st.subheader("Ask a question from the PDF")
+        user_question = st.text_input("Enter your question")
 
-    if user_question:
-        with st.spinner("Generating concise answer..."):
-            result = st.session_state.qa_chain({"query": user_question})
-            answer = result["result"].strip()
-            st.session_state.answer = answer
+        if user_question:
+            with st.spinner("Generating concise answer..."):
+                result = st.session_state.qa_chain({"query": user_question})
+                answer = result["result"].strip()
+                st.session_state.answer = answer
 
-    if st.session_state.answer:
-        # Show concise answer
-        st.markdown("### Answer:")
-        concise = ". ".join(st.session_state.answer.split(". ")[:5])
-        st.write(concise + ("." if not concise.endswith(".") else ""))
+        if st.session_state.answer:
+            # Show concise answer
+            st.markdown("### Answer:")
+            concise = ". ".join(st.session_state.answer.split(". ")[:5])
+            st.write(concise + ("." if not concise.endswith(".") else ""))
+
 else:
+    # This block handles the case where no file is uploaded or a file is canceled
     st.info("Please upload a PDF file to get started.")
